@@ -4,12 +4,29 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+require('dotenv').config();
+const connectionString =
+process.env.MONGO_CON
+mongoose = require('mongoose');
+mongoose.connect(connectionString,
+{useNewUrlParser: true,
+useUnifiedTopology: true});
+
+//Get the default connection
+var db = mongoose.connection;
+//Bind connection to error event
+db.on('error', console.error.bind(console, 'MongoDB connectionerror:'));
+db.once("open", function(){
+console.log("Connection to DB succeeded")})
+
+var nike = require("./models/nike");
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var nikeRouter = require('./routes/nike');
 var boardRouter = require('./routes/board');
 var selectorRouter = require('./routes/selector');
-
+var resourceRouter = require('./routes/resource');
 
 
 
@@ -30,7 +47,34 @@ app.use('/users', usersRouter);
 app.use('/nike', nikeRouter);
 app.use('/board', boardRouter);
 app.use('/selector', selectorRouter);
+app.use('/resource', resourceRouter);
 
+async function recreateDB(){
+  // Delete everything
+  await nike.deleteMany();
+  let instance1 = new nike({nike: "Shoes", size: "large", cost: 3000});
+  
+  instance1.save().then( function(err,doc) {
+  if(err) return console.error(err);
+  console.log("First object saved")
+  });
+ 
+ let instance2 = new nike({nike: "Slides", size: "med", cost: 2400});
+  
+  instance2.save().then( function(err,doc) {
+  if(err) return console.error(err);
+  console.log("Second object saved")
+  });
+ 
+ let instance3 = new nike({nike: "Belt", size: "small", cost: 1080});
+  
+  instance3.save().then( function(err,doc) {
+  if(err) return console.error(err);
+  console.log("Third object saved")
+  });
+}
+ let reseed = true;
+ if (reseed) { recreateDB();}
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
