@@ -26,9 +26,23 @@ exports.nike_list = async function(req, res) {
     }
     
 // for a specific nike.
-exports.nike_detail = function(req, res) {
+/*exports.nike_detail = function(req, res) {
 res.send('NOT IMPLEMENTED: nike detail: ' + req.params.id);
 };
+*/
+
+// for a specific nike.
+exports.nike_detail = async function(req, res) {
+    console.log("detail" + req.params.id)
+    try {
+    result = await nike.findById( req.params.id)
+    res.send(result)
+    } catch (error) {
+    res.status(500)
+    res.send(`{"error": document for id ${req.params.id} not found`);
+    }
+   };
+
 // Handle nike create on POST.
 exports.nike_create_post = async function(req, res) {
     console.log(req.body)

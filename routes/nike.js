@@ -12,5 +12,5 @@ var express = require('express');
 const nike_controlers= require('../controllers/nike');
 var router = express.Router();
 /* GET nike */
-router.get('/', nike_controlers.nike_view_all_Page );
+router.get('/nike/:id', nike_controlers.nike_view_all_Page );
 module.exports = router;
