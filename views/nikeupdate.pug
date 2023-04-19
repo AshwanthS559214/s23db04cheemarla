@@ -1,41 +1,43 @@
 extends layout
+
 block content
- h1= title
+  if (toShow == null)
+   h2 No instance to delete
+  else
+   - let nikeid = toShow._id
+   - let nike_type = toShow.nike
+   - let nikecost = toShow.cost
+   - let nikesize = toShow.size
 
- - let nikeid = toShow._id
- - let nike = toShow.nike
- - let cost = toShow.cost
- - let size = toShow.size
-
- div.row(class='mb-2')
-   div.mr-1 ID is
-   div #{nikeid}
- - let actionid = "/resource/nike/" + nikeid
- form(id='nikeForm', action= actionid, method="PUT")
-  div.form-group
-    label.nikeAttr(for='nike') nike type
-    input#nike(type='text', name='nike', value= nike )
-  div.form-group
-    label.nikeAttr(for='size') nike size
-    input#size(type='text', name='size', value= size )
-  div.form-group
-    label.nikeAttr(for='cost') nike cost
-    input#cost(type='number', name='cost', value= cost )
-  input(type="submit")
- script.
-  document.forms['nikeForm'].addEventListener('submit', (event) => {
-    event.preventDefault();
-    // TODO do something here to show user that form is being submitted
-    fetch(event.target.action, {
-     method: 'PUT',
-     body: new URLSearchParams(new FormData(event.target)) // event.target is the form
-    }).then((resp) => {
-     return resp.json(); // or resp.text() or whatever the server sends
-    }).then((body) => {
-     alert("Update succeded")
-     // TODO handle body
-    }).catch((error) => {
-     // TODO handle error
-     alert("Update failed " + error )
-    });
-  });
+  div.row(class='mb-2')
+    div.mr-1 ID is
+    div #{nikeid}
+  - let actionid = "/resource/nike/" + nikeid
+  form(id='nikeForm', action= actionid, method="PUT")
+   div.form-group
+     label.nikeAttr(for='nike') nike type
+     input#nike(type='text', name='nike', value= nike )
+   div.form-group
+     label.nikeAttr(for='size') nike size
+     input#size(type='text', name='size', value= size )
+   div.form-group
+     label.nikeAttr(for='cost') nike cost
+     input#cost(type='number', name='cost', value= cost )
+   input(type="submit")
+  script.
+   document.forms['nikeForm'].addEventListener('submit', (event) => {
+     event.preventDefault();
+     // TODO do something here to show user that form is being submitted
+     fetch(event.target.action, {
+      method: 'PUT',
+      body: new URLSearchParams(new FormData(event.target)) // event.target is the form
+     }).then((resp) => {
+      return resp.json(); // or resp.text() or whatever the server sends
+     }).then((body) => {
+      alert("Update succeded")
+      // TODO handle body
+     }).catch((error) => {
+      // TODO handle error
+      alert("Update failed " + error )
+     });
+   });
