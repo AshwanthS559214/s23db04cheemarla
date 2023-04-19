@@ -68,8 +68,28 @@ exports.nike_delete = function(req, res) {
 res.send('NOT IMPLEMENTED: nike delete DELETE ' + req.params.id);
 };
 // Handle nike update form on PUT.
-exports.nike_update_put = function(req, res) {
+/*exports.nike_update_put = function(req, res) {
 res.send('NOT IMPLEMENTED: nike update PUT' + req.params.id);
+};*/
+//Handle nike update form on PUT.
+exports.nike_update_put = async function(req, res) {
+ console.log(`update on id ${req.params.id} with body
+${JSON.stringify(req.body)}`)
+ try {
+ let toUpdate = await nike.findById( req.params.id)
+ // Do updates of properties
+ if(req.body.nike)
+ toUpdate.nike = req.body.nike;
+ if(req.body.size) toUpdate.size = req.body.size;
+ if(req.body.cost) toUpdate.cost = req.body.cost;
+ let result = await toUpdate.save();
+ console.log("Sucess " + result)
+ res.send(result)
+ } catch (err) {
+ res.status(500)
+ res.send(`{"error": ${err}: Update for id ${req.params.id}
+failed`);
+ }
 };
 // VIEWS
 // Handle a show all view
