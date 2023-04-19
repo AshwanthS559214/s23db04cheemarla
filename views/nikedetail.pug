@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h1=title
+
+  if (toShow == null)
+   h2 No instance to delete
+  else
+   - let nikeid = toShow._id
+   - let nike_type = toShow.nike
+   - let nikecost = toShow.cost
+   - let nikesize = toShow.size
+  div
+    div.row
+     div(class='nikeAttr mr-3') nike ID is:
+     div #{nikeid}
+    div.row
+     div(class='nikeAttr mr-3') nike Type is:
+     div #{nike_type}
+    div.row
+     div(class='nikeAttr mr-3') nike Size is:
+     div #{nikesize}
+    div.row
+     div(class='nikeAttr mr-3') nike Cost is:
+     div #{nikecost}

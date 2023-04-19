@@ -6,3 +6,11 @@ body {
 a {
   color: #00B7FF;
 }
+.nikeAttr {
+   background-color: rgb(2, 11, 15);
+  width: 120px;
+  padding: 10px 20px;
+  margin: 5px;
+  display: inline-block;
+  border: 5px solid rgb(171, 41, 41);
+  }

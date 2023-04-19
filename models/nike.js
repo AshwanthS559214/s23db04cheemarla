@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 const nikeSchema = mongoose.Schema({
-nike_type: String,
+nike : String,
 size: String,
 cost: Number
 })
