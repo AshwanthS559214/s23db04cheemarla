@@ -1,22 +1,26 @@
 extends layout
-
 block content
   h1= title
-  -let nike = results;
-  div(class="container_fluid")
-    each item,index in nike
-      - let destination = `dispatch(\"/nike/update?id=${item._id}\")`
-        div(class="row" onclick=`buy(${index})`)       
+  -let items = results
+  -let destination1 = `dispatch(\"/nike/create\")`
+  button.btn( class="btn-info ml-1", onclick= destination1) Create
+  div(class="container-fluid")
+   
+    each item,index in items
+     - let destination2 = `dispatch(\"/nike/update?id=${item._id}\")`
+     - let destination3 = `dispatch(\"/nike/detail?id=${item._id}\")`
+     - let destination4 = `dispatch(\"/nike/delete?id=${item._id}\")`
+     div(class="row" onclick = `buy(${index})`)       
             div(class="col-sm-2") #{item.nike}
             div(class="col-sm-2") #{item.size}
-            div(class="col-sm-2") #{item.cost}
-        button.btn( class="btn-primary ml-1", onclick= destination) Update
+            div(class="col-sm-2") #{item.cost}  
+     button.btn( class="btn-primary ml-1", onclick= destination2) Update
+     button.btn( class="btn-secondary ml-1", onclick= destination3) Detail  
+     button.btn( class="btn-warning", onclick= destination4) Delete
+
+
   script.
-      function buy(indexnumber){
-        //indexnumber=indexnumber+1;
-        alert('You purchased item '+ indexnumber)
-      }
-  script.
-      function dispatch(path){
-      window.location.href=path
-      }
+   function dispatch(path){
+     window.location.href=path
+   }
+   

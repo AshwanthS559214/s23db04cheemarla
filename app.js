@@ -4,33 +4,17 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-require('dotenv').config();
-const connectionString =
-process.env.MONGO_CON
-mongoose = require('mongoose');
-mongoose.connect(connectionString,
-{useNewUrlParser: true,
-useUnifiedTopology: true});
 
-//Get the default connection
-var db = mongoose.connection;
-//Bind connection to error event
-db.on('error', console.error.bind(console, 'MongoDB connectionerror:'));
-db.once("open", function(){
-console.log("Connection to DB succeeded")})
-
-var nike = require("./models/nike");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var nikeRouter = require('./routes/nike');
+var ballRouter = require('./routes/nike');
 var boardRouter = require('./routes/board');
-var selectorRouter = require('./routes/selector');
+var selectRouter=require('./routes/selector');
+var nike = require("./models/nike");
 var resourceRouter = require('./routes/resource');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
-
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
@@ -57,16 +41,6 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/nike', nikeRouter);
-app.use('/board', boardRouter);
-app.use('/selector', selectorRouter);
-app.use('/resource', resourceRouter);
-
-
 app.use(require('express-session')({
   secret: 'keyboard cat',
   resave: false,
@@ -74,35 +48,24 @@ app.use(require('express-session')({
   }));
   app.use(passport.initialize());
   app.use(passport.session());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use('/nike', ballRouter);
+app.use('/board',boardRouter);
+app.use('/selector', selectRouter);
+app.use('/resource', resourceRouter);
 
 
+require('dotenv').config();
+const connectionString =
+process.env.MONGO_CON
+mongoose = require('mongoose');
+mongoose.connect(connectionString,
+{useNewUrlParser: true,
+useUnifiedTopology: true});
 
-async function recreateDB(){
-  // Delete everything
-  await nike.deleteMany();
-  let instance1 = new nike({nike: "Shoes", size: "large", cost: 3000});
-  
-  instance1.save().then( function(err,doc) {
-  if(err) return console.error(err);
-  console.log("First object saved")
-  });
- 
- let instance2 = new nike({nike: "Slides", size: "med", cost: 2400});
-  
-  instance2.save().then( function(err,doc) {
-  if(err) return console.error(err);
-  console.log("Second object saved")
-  });
- 
- let instance3 = new nike({nike: "Belt", size: "small", cost: 1080});
-  
-  instance3.save().then( function(err,doc) {
-  if(err) return console.error(err);
-  console.log("Third object saved")
-  });
-}
- let reseed = true;
- if (reseed) { recreateDB();}
 // passport config
 // Use the existing connection
 // The Account model
@@ -110,6 +73,7 @@ var Account =require('./models/account');
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -125,5 +89,47 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+//Get the default connection
+var db = mongoose.connection;
+//Bind connection to error event
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once("open", function(){
+console.log("Connection to DB succeeded")});
+
+// We can seed the collection if needed on server start
+async function recreateDB(){
+ // Delete everything
+ await nike.deleteMany();
+ let instance1 = new
+nike({ball_name:"Cricket", ball_shape:'small',
+ball_radius:10});
+await instance1.save();
+//  instance1.save( function(err,doc) {
+//  if(err) return console.error(err);
+ console.log("First object saved")
+//  });
+let instance2 = new
+nike({ball_name:"rugby", ball_shape:'medium',
+ball_radius:20});
+await instance2.save();
+//  instance1.save( function(err,doc) {
+//  if(err) return console.error(err);
+ console.log("second object saved")
+//  });
+
+let instance3 = new
+nike({ball_name:"volleyball", ball_shape:'large',
+ball_radius:30});
+await instance3.save();
+//  instance1.save( function(err,doc) {
+//  if(err) return console.error(err);
+ console.log("third object saved")
+//  });
+
+}
+let reseed = true;
+if (reseed) { recreateDB();}
+
 
 module.exports = app;
